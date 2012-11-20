@@ -50,8 +50,8 @@ object Interpreter {
     case _ => None
   }
   
-  private def replace(x0 : X, fnl : Final, e0 : Expr) : Expr = {
-    val r : Expr => Expr = e => replace(x0, fnl, e)
+  private def replace(x0 : X, replacement : Final, e0 : Expr) : Expr = {
+    val r : Expr => Expr = e => replace(x0, replacement, e)
     
     e0 match {
       case Fn(x, e) => if(x.name == x0.name) Fn(x, e) else Fn(x, r(e))
@@ -59,7 +59,7 @@ object Interpreter {
       case Op(op, e1, e2) => Op(op, r(e1), r(e2))
       case If(e1, e2, e3) => If(r(e1), r(e2), r(e3))
       case App(e1, e2) => App(r(e1), r(e2))
-      case x : X => if(x.name == x0.name) fnl else x
+      case x : X => if(x.name == x0.name) replacement else x
       case Let(x, e1, e2) => if(x0.name == x.name) Let(x, r(e1), e2) else Let(x, r(e1), r(e2))
       case TryWith(e1, e2) => TryWith(r(e1), r(e2))
     }
