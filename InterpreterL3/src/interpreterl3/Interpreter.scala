@@ -19,7 +19,7 @@ object Interpreter {
       }
   }
   
-  def step(e : Expr) : Option[Expr] = e match {
+  private def step(e : Expr) : Option[Expr] = e match {
     // Não pode dar mais passos; fim da avaliação
     case _ : Final => None
     // Regras do OP
@@ -50,7 +50,7 @@ object Interpreter {
     case _ => None
   }
   
-  def replace(x0 : X, fnl : Final, e0 : Expr) : Expr = {
+  private def replace(x0 : X, fnl : Final, e0 : Expr) : Expr = {
     val r : Expr => Expr = e => replace(x0, fnl, e)
     
     e0 match {
