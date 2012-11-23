@@ -42,7 +42,21 @@ object TypeCheck {
         }
     }
   }
+       
+  def unify(c : Set[(TypeOperand, TypeOperand)]) : Option[Set[(TypeOperand, TypeOperand)]] = 
+  {
+    while(!c.isEmpty)
+      {
+        for(equation <- c)
+          {
+            equation match
+            {
+              case OBA
+            }
+          }
+      }
     
+  }   
 }
 
 
