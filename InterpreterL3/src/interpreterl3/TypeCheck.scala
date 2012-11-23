@@ -11,6 +11,7 @@ case class Bool_() extends TypeOperand
 case class Int_() extends TypeOperand
 case class Func(T1 : TypeOperand, T2 : TypeOperand) extends TypeOperand
 case class Variable(v : Int) extends TypeOperand
+case class Raise_() extends TypeOperand
 
 abstract class TypeEquation(op1 : TypeOperand, op2: TypeOperand);
 
@@ -24,20 +25,20 @@ object TypeCheck {
     }
 
   
-  def typecheck(e : Expr) : (TypeOperand,Set[TypeEquation]) = {
+  def typecheck(e : Expr, gamma: Map[String,TypeOperand]) : (TypeOperand,Set[TypeEquation]) = {
     e match {
       case If(e1,e2,e3)=>
         {
           var T1 : Variable = Variable(newInt())
           var T2 : Variable = Variable(newInt())
-           (typecheck(e2)._t1,
-            TypeEquation(typecheck(e1)._1,Bool_()) ++ // tipo de e1 == bool
+           (typecheck(e2,gamma)._t1,
+            TypeEquation(typecheck(e1,gamma)._1,Bool_()) ++ // tipo de e1 == bool
             TypeEquation(T1,T2) ++ // T1==T2
-            TypeEquation(T1,typecheck(e2)._1) ++ // tipo e2 = T1
-            TypeEquation(T2,typecheck(e3)._1) ++ // tipo e3 = T2
-            typecheck(e1)._2 ++ // adiciona os subconjuntos
-            typecheck(e2)._2 ++
-            typecheck(e3)._2
+            TypeEquation(T1,typecheck(e2,gamma)._1) ++ // tipo e2 = T1
+            TypeEquation(T2,typecheck(e3,gamma)._1) ++ // tipo e3 = T2
+            typecheck(e1,gamma)._2 ++ // adiciona os subconjuntos
+            typecheck(e2,gamma)._2 ++
+            typecheck(e3,gamma)._2
            )
         }
       case Op(op,e1,e2)=>
@@ -50,8 +51,8 @@ object TypeCheck {
                     (Int(),
                       TypeEquation(T1,Int_()) ++
                       TypeEquation(T2,Int_()) ++
-                      typecheck(e1)._2 ++
-                      typecheck(e2)._2
+                      typecheck(e1,gamma)._2 ++
+                      typecheck(e2,gamma)._2
                     )
                     
               }
@@ -62,8 +63,8 @@ object TypeCheck {
                     (Bool(),
                       TypeEquation(T1,Bool_()) ++
                       TypeEquation(T2,Bool_()) ++
-                      typecheck(e1)._2 ++
-                      typecheck(e2)._2
+                      typecheck(e1,gamma)._2 ++
+                      typecheck(e2,gamma)._2
                      )
               }
           }
@@ -73,8 +74,8 @@ object TypeCheck {
             var T1 : Variable = Variable(newInt())
             var T2 : Variable = Variable(newInt())
             (T2,
-             TypeEquation(Func(T1,T2),typecheck(e1)._1) ++
-             TypeEquation(T1,typecheck(e2)._1) ++
+             TypeEquation(Func(T1,T2),typecheck(e1,gamma)._1) ++
+             TypeEquation(T1,typecheck(e2,gamma)._1) ++
              typecheck(e1)._2 ++
              typecheck(e2)._2
              
@@ -83,8 +84,14 @@ object TypeCheck {
          }
       case N => Int_()
       case B => Bool_()
+      case X(name) => gamma.get(name)
       case Fn(x,e) => 
-    }
+        {
+          gamma+=(x -> Variable(newInt()))
+          (typecheck(e,gamma)._1,
+           typecheck(e._2,gamma))
+        }
+      case Raise => Raise_()
   }
        
   def unify(c : Set[(TypeOperand, TypeOperand)]) : Option[Set[(TypeOperand, TypeOperand)]] = 
