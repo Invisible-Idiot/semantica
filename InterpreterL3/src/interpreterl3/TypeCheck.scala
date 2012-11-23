@@ -7,9 +7,9 @@ package interpreterl3
 
 
 abstract class TypeOperand
-case class B() extends TypeOperand
-case class N() extends TypeOperand
-case class Fn (x : TypeOperand, e : TypeOperand) extends TypeOperand
+case class B_() extends TypeOperand
+case class N_() extends TypeOperand
+case class Fn_ (T1 : TypeOperand, T2 : TypeOperand) extends TypeOperand
 case class Variable(v : Int) extends TypeOperand
 
 abstract class TypeEquation(op1 : TypeOperand, op2: TypeOperand);
@@ -28,14 +28,14 @@ object TypeCheck {
     e match {
       case If(e1,e2,e3)=>
         {
-          var newVar1 : Variable = Variable(newInt())
-          var newVar2 : Variable = Variable(newInt())
+          var T1 : Variable = Variable(newInt())
+          var T2 : Variable = Variable(newInt())
            (typecheck(e2)._t1,
-            TypeEquation(typecheck(e1)._1,B()) ++ 
-            TypeEquation(newVar1,newVar2) ++
-            TypeEquation(newVar1,typecheck(e2)._1) ++
-            TypeEquation(newVar2,typecheck(e3)._1) ++
-            typecheck(e1)._2 ++
+            TypeEquation(typecheck(e1)._1,B_()) ++ // tipo de e1 == bool
+            TypeEquation(T1,T2) ++ // T1==T2
+            TypeEquation(T1,typecheck(e2)._1) ++ // tipo e2 = T1
+            TypeEquation(T2,typecheck(e3)._1) ++ // tipo e3 = T2
+            typecheck(e1)._2 ++ // adiciona os subconjuntos
             typecheck(e2)._2 ++
             typecheck(e3)._2
            )
