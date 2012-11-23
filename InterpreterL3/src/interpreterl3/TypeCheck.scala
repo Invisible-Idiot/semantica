@@ -92,7 +92,18 @@ object TypeCheck {
            typecheck(e._2,gamma))
         }
       case Raise => Raise_()
+      case TryWith(e1,e2) => 
+        {
+          (typecheck(e1,gamma)._1,
+           TypeEquation(typecheck(e1,gamma)._1,typecheck(e2,gamma)._1) ++
+           typecheck(e1,gamma)._2 ++
+           typecheck(e2,gamma)._2
+          )
+          
+        }
   }
+  }
+    
        
   def unify(c : Set[(TypeOperand, TypeOperand)]) : Option[Set[(TypeOperand, TypeOperand)]] = 
   {
@@ -108,7 +119,7 @@ object TypeCheck {
       }
     
   }   
-}
+
 
 
 
