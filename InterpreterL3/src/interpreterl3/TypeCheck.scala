@@ -7,20 +7,42 @@ package interpreterl3
 
 
 abstract class TypeOperand
-case class B(b : Boolean) extends TypeOperand
-case class N(n : Int) extends TypeOperand
-case class Fn (x : X, e : Expr) extends TypeOperand
-case class Variable(v : String) extends TypeOperand
+case class B() extends TypeOperand
+case class N() extends TypeOperand
+case class Fn (x : TypeOperand, e : TypeOperand) extends TypeOperand
+case class Variable(v : Int) extends TypeOperand
 
 abstract class TypeEquation(op1 : TypeOperand, op2: TypeOperand);
 
 object TypeCheck {
-  def collect(e : Expr, t : Set[TypeEquation]) : Set[TypeEquation] =
+ 
+  var nextVar : Int = 0
+  def newInt(a : Unit) : Int = 
     {
-      e match{
-        case If => t ++ TypeEquation(e.)
-      } 
+      nextVar = nextVar + 1
+      nextVar
     }
+
+  
+  def typecheck(e : Expr) : (TypeOperand,Set[TypeEquation]) = {
+    e match {
+      case If(e1,e2,e3)=>
+        {
+          var newVar1 : Variable = Variable(newInt())
+          var newVar2 : Variable = Variable(newInt())
+           (typecheck(e2)._t1,
+            TypeEquation(typecheck(e1)._1,B()) ++ 
+            TypeEquation(newVar1,newVar2) ++
+            TypeEquation(newVar1,typecheck(e2)._1) ++
+            TypeEquation(newVar2,typecheck(e3)._1) ++
+            typecheck(e1)._2 ++
+            typecheck(e2)._2 ++
+            typecheck(e3)._2
+           )
+        }
+    }
+  }
+    
 }
 
 
