@@ -13,7 +13,7 @@ case class Func(T1 : TypeOperand, T2 : TypeOperand) extends TypeOperand
 case class Variable(v : Int) extends TypeOperand
 case class Raise_() extends TypeOperand
 
-class TypeEquation(op1 : TypeOperand, op2: TypeOperand);
+case class TypeEquation(op1 : TypeOperand, op2: TypeOperand);
 
 object TypeCheck {
  
@@ -105,10 +105,10 @@ object TypeCheck {
   }
     
        
-  def unify(c : Set[(TypeOperand, TypeOperand)]) : Set[(TypeOperand, TypeOperand)] = 
+  def unify(c : Set[TypeEquation]) : Set[TypeEquation] = 
   {   
     var aux = c;
-    var result : Set[(TypeOperand, TypeOperand)] = Set();
+    var result : Set[TypeEquation] = Set();
     var modified = false;
     while(!modified)
       {
@@ -117,7 +117,7 @@ object TypeCheck {
           {
             equation match
             {
-              case TypeEquation(Fn_(t1, t2), Fn_(t3,t4)) => 
+              case TypeEquation(Func(t1, t2), Func(t3,t4)) => 
                 {
                   modified = true;
                   result = result ++ Set(TypeEquation(t1,t3),TypeEquation(t2,t4))
@@ -143,9 +143,5 @@ object TypeCheck {
       
     return result;
     
-  }   
-
-
-
-
-
+  }
+}
