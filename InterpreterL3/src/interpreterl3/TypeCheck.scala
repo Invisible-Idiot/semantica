@@ -119,20 +119,44 @@ object TypeCheck {
             {
               case TypeEquation(Func(t1, t2), Func(t3,t4)) => 
                 {
-                  modified = true;
-                  result = result ++ Set(TypeEquation(t1,t3),TypeEquation(t2,t4))
+                    modified = true
+                    result = result ++ Set(TypeEquation(t1,t3),TypeEquation(t2,t4))
                 }
+                
+              case TypeEquation(t1 : Variable, Func(t2,t3)) =>
+                 {
+                    modified = true;
+                    result = result ++ Set(TypeEquation(t1,Func(t2,t3)))
+                 }
+              case TypeEquation( Func(t1,t2), t3 : Variable) =>
+                 {
+                    modified = true;
+                    result = result ++ Set(TypeEquation(Func(t1,t2), t3))
+                 }
+              case TypeEquation(t1, Func(t2,t3)) =>
+                 {
+                   return null
+                 }
+              case TypeEquation( Func(t1,t2), t3) =>
+                 {
+                    return null
+                 }
               case TypeEquation(t1, t2 : Variable) =>
-                {           
+                {
                    result = result ++ Set(TypeEquation(t1, t2));
                 }
               case TypeEquation(t1 : Variable, t2) =>
-                {            
+                {
                    result = result ++ Set(TypeEquation(t2, t1));                  
                 }
               case TypeEquation(t1, t2) =>
                 {
-                  //wtf
+                  if(t1 equals t2)
+                    {
+                      //faznada
+                    }
+                  else
+                    return null;
                 }
               case _ => 
                 {}
