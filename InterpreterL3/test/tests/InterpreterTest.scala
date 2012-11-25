@@ -8,6 +8,7 @@ package tests
 import org.junit._
 import Assert._
 import interpreterl3._
+import ExprBuilder._
 
 class InterpreterTest {
 
@@ -30,15 +31,23 @@ class InterpreterTest {
      * ->
      * 4
      */
-    val e =
+    val e : BuildingExpr =
+      X("x") \<- (X("x") \=>: (X("x") \>= N(target))) _in {
+        X("f") \<- (X("y") \=>: X("count") \=>: X("next") \=>: {
+          X("count") _if (X("x") _app X("y")) _else
+             X("next") _app (X("y") \+ N(incr)) _app (X("count") \+ N(1)) _app X("next")
+        }) _in
+        (X("f") _app N(seed) _app N(0) _app X("f"))
+      }
+      /*
       Let(X("x"), Fn(X("x"), Op(LargerOrEqual, X("x"), N(target))),
         Let(X("f"), Fn(X("y"), Fn(X("count"), Fn(X("next"),
           If(App(X("x"), X("y")),
              X("count"),
              App(App(App(X("next"), Op(Plus, X("y"), N(incr))), Op(Plus, X("count"), N(1))), X("next")))))),
-        App(App(App(X("f"), N(seed)), N(0)), X("f"))))
+        App(App(App(X("f"), N(seed)), N(0)), X("f"))))*/
 
-    return e
+    return e.build()
   }
   
   @Test
