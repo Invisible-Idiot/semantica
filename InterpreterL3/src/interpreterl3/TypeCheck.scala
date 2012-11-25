@@ -11,7 +11,6 @@ case class Bool_() extends TypeOperand
 case class Int_() extends TypeOperand
 case class Func(T1 : TypeOperand, T2 : TypeOperand) extends TypeOperand
 case class Variable(v : Int) extends TypeOperand
-case class Raise_() extends TypeOperand
 
 case class TypeEquation(op1 : TypeOperand, op2: TypeOperand);
 
@@ -82,16 +81,16 @@ object TypeCheck {
             )
             
          }
-      case N => Int_()
-      case B => Bool_()
-      case X(name) => gamma.get(name)
+      case N => (Int_(),Set())
+      case B => (Bool_(),Set())
+      case X(name) => (gamma.get(name),Set())
       case Fn(x,e) => 
         {
           gamma+=(x -> Variable(newInt()))
           (typecheck(e,gamma)._1,
            typecheck(e._2,gamma))
         }
-      case Raise => Raise_()
+      case Raise => (Variable(newInt()),Set())
       case TryWith(e1,e2) => 
         {
           (typecheck(e1,gamma)._1,
