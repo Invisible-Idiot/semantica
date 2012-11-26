@@ -104,7 +104,7 @@ object TypeCheck {
   }
     
        
-  def unify(c : Set[TypeEquation]) : Set[TypeEquation] = 
+  def unify(c : Set[TypeEquation]) : Option[Set[TypeEquation]] = 
   {   
     var aux = c;
     var result : Set[TypeEquation] = Set();
@@ -134,11 +134,11 @@ object TypeCheck {
                  }
               case TypeEquation(t1, Func(t2,t3)) =>
                  {
-                   return null
+                   return None
                  }
               case TypeEquation( Func(t1,t2), t3) =>
                  {
-                    return null
+                    return None
                  }
               case TypeEquation(t1, t2 : Variable) =>
                 {
@@ -155,7 +155,7 @@ object TypeCheck {
                       //faznada
                     }
                   else
-                    return null;
+                    return None;
                 }
               case _ => 
                 {}
@@ -164,7 +164,7 @@ object TypeCheck {
          aux=result;
       }
       
-    return result;
+    return Some(result);
     
   }
   
