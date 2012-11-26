@@ -168,8 +168,21 @@ object TypeCheck {
     
   }
   
-  def substitution(t : TypeOperand, c : Set[TypeEquation]) : Set[TypeEquation] =
-    {
+  def substitution(t : TypeOperand, c :  Map[Variable, TypeOperand]) : Option[TypeOperand] =
+    {  
+      t match
+      {
+        case Bool_() => Some(Bool_())
+        case Int_() => Some(Int_())
+        case x : Variable => c.get(x)
+        case Func(t1, t2) => //Func(find(t1, v, c), find(t2, v, c))
+          (substitution(t1,c),substitution(t2,c)) 
+          match 
+          { 
+            case (Some( a),Some( b)) => Some(Func(a,b)) 
+          case _ => None 
+          }
+      }
     }
     
   def find(t : TypeOperand, v : Variable, c : Map[Variable, TypeOperand]) : Option[TypeOperand] = 
@@ -183,7 +196,8 @@ object TypeCheck {
             c.get(v)
           else
             None;
-        case Func(t1, t2) => Func(find(t1, v, c), find(t2, v, c))
+        case Func(t1, t2) => //Func(find(t1, v, c), find(t2, v, c))
+          (find(t1,v,c),find(t2,v,c)) match { case (Some( a),Some( b)) => Some(Func(a,b)) case _ => None }
       }
     }
   
