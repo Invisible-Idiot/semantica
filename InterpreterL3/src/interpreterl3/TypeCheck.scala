@@ -30,8 +30,8 @@ object TypeCheck {
         {
           var T1 : Variable = Variable(newInt())
           var T2 : Variable = Variable(newInt())
-           (typecheck(e2,gamma)._t1,
-            TypeEquation(typecheck(e1,gamma)._1,Bool_()) ++ // tipo de e1 == bool
+           (typecheck(e2,gamma)._1,
+            Set(TypeEquation(typecheck(e1,gamma)._1,Bool_())) ++ // tipo de e1 == bool
             TypeEquation(T1,T2) ++ // T1==T2
             TypeEquation(T1,typecheck(e2,gamma)._1) ++ // tipo e2 = T1
             TypeEquation(T2,typecheck(e3,gamma)._1) ++ // tipo e3 = T2
@@ -47,7 +47,7 @@ object TypeCheck {
               {
                     var T1 : Variable = Variable(newInt())
                     var T2 : Variable = Variable(newInt())
-                    (Int(),
+                    (Int_(),
                       TypeEquation(T1,Int_()) ++
                       TypeEquation(T2,Int_()) ++
                       typecheck(e1,gamma)._2 ++
