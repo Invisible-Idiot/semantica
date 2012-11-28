@@ -30,11 +30,13 @@ object TypeCheck {
         {
           var T1 : Variable = Variable(newInt())
           var T2 : Variable = Variable(newInt())
+        
+          
            (typecheck(e2,gamma)._1,
-            Set(TypeEquation(typecheck(e1,gamma)._1,Bool_())) ++ // tipo de e1 == bool
-            TypeEquation(T1,T2) ++ // T1==T2
-            TypeEquation(T1,typecheck(e2,gamma)._1) ++ // tipo e2 = T1
-            TypeEquation(T2,typecheck(e3,gamma)._1) ++ // tipo e3 = T2
+            Set(TypeEquation(typecheck(e1,gamma)._1,Bool_())) ++
+            Set(TypeEquation(T1,T2)) ++ // T1==T2
+            Set(TypeEquation(T1,typecheck(e2,gamma)._1)) ++ // tipo e2 = T1
+            Set(TypeEquation(T2,typecheck(e3,gamma)._1)) ++ // tipo e3 = T2
             typecheck(e1,gamma)._2 ++ // adiciona os subconjuntos
             typecheck(e2,gamma)._2 ++
             typecheck(e3,gamma)._2
@@ -48,8 +50,8 @@ object TypeCheck {
                     var T1 : Variable = Variable(newInt())
                     var T2 : Variable = Variable(newInt())
                     (Int_(),
-                      TypeEquation(T1,Int_()) ++
-                      TypeEquation(T2,Int_()) ++
+                      Set(TypeEquation(T1,Int_())) ++
+                      Set(TypeEquation(T2,Int_())) ++
                       typecheck(e1,gamma)._2 ++
                       typecheck(e2,gamma)._2
                     )
@@ -59,9 +61,9 @@ object TypeCheck {
               {
                      var T1 : Variable = Variable(newInt())
                       var T2 : Variable = Variable(newInt())
-                    (Bool(),
-                      TypeEquation(T1,Bool_()) ++
-                      TypeEquation(T2,Bool_()) ++
+                    (Bool_(),
+                      Set(TypeEquation(T1,Bool_())) ++
+                      Set(TypeEquation(T2,Bool_())) ++
                       typecheck(e1,gamma)._2 ++
                       typecheck(e2,gamma)._2
                      )
@@ -73,28 +75,29 @@ object TypeCheck {
             var T1 : Variable = Variable(newInt())
             var T2 : Variable = Variable(newInt())
             (T2,
-             TypeEquation(Func(T1,T2),typecheck(e1,gamma)._1) ++
-             TypeEquation(T1,typecheck(e2,gamma)._1) ++
-             typecheck(e1)._2 ++
-             typecheck(e2)._2
+             Set(TypeEquation(Func(T1,T2),typecheck(e1,gamma)._1)) ++
+             Set(TypeEquation(T1,typecheck(e2,gamma)._1)) ++
+             typecheck(e1,gamma)._2 ++
+             typecheck(e2,gamma)._2
              
             )
             
          }
-      case N => (Int_(),Set())
-      case B => (Bool_(),Set())
-      case X(name) => (gamma.get(name),Set())
+      case N(e1) => (Int_(),Set())
+      case B(e1) => (Bool_(),Set())
+      case X(name) => (gamma.apply(name),Set())
       case Fn(x,e) => 
         {
-          gamma+=(x -> Variable(newInt()))
-          (typecheck(e,gamma)._1,
-           typecheck(e._2,gamma))
+          var gamma2 = gamma
+          gamma2 +=(x.toString() -> Variable(newInt()))
+          (typecheck(e,gamma2)._1,
+           typecheck(e,gamma2)._2)
         }
       case Raise => (Variable(newInt()),Set())
       case TryWith(e1,e2) => 
         {
           (typecheck(e1,gamma)._1,
-           TypeEquation(typecheck(e1,gamma)._1,typecheck(e2,gamma)._1) ++
+           Set(TypeEquation(typecheck(e1,gamma)._1,typecheck(e2,gamma)._1)) ++
            typecheck(e1,gamma)._2 ++
            typecheck(e2,gamma)._2
           )
