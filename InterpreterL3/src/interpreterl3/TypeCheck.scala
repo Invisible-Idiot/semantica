@@ -86,10 +86,10 @@ object TypeCheck {
       case N(e1) => (Int_(),Set())
       case B(e1) => (Bool_(),Set())
       case X(name) => (gamma.apply(name),Set())
-      case Fn(x,e) => 
+      case Fn(X(name),e) => 
         {
           var gamma2 = gamma
-          gamma2 +=(x.toString() -> Variable(newInt()))
+          gamma2 +=(name -> Variable(newInt()))
           (typecheck(e,gamma2)._1,
            typecheck(e,gamma2)._2)
         }
