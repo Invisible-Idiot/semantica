@@ -3,15 +3,17 @@
  * and open the template in the editor.
  */
 
-package tests
-
-import interpreterl3._
+package interpreterl3
 
 object ExprBuilder {
+  //implicit def x(name : String) = new BuildingVar(X(name))
+  //implicit def n(value : Int) = new BuildingExpr(N(value))
+  //implicit def b(value : Boolean) = new BuildingExpr(B(value))
+  
   class BuildingExpr(e : Expr) {
     def \+ (e2 : Expr) = Op(Plus, e, e2)
     def \>= (e2 : Expr) = Op(LargerOrEqual, e, e2)
-    def _if (e1 : Expr) = (e3 : Expr) => If(e1, e, e3)
+    def _then (e2 : Expr) = (e3 : Expr) => If(e, e2, e3)
     def \=>: (x : X) = Fn(x, e)
     def _app (e2 : Expr) = App(e, e2)
     def _tryWith (e2 : Expr) = TryWith(e, e2)
