@@ -2,14 +2,4 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/src/interpreterl3/ExprBuilder.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/src/interpreterl3/Expr.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/src/interpreterl3/TypeInference.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/src/interpreterl3/Interpreter.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/src/interpreterl3/Main.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/src/interpreterl3/TypeOperand.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/test/tests/InterpreterTest.scala</file>
-        <file>file:/C:/Users/Lucas/Documents/GitHub/semantica/InterpreterL3/test/tests/TypeInferenceTest.scala</file>
-    </open-files>
 </project-private>

@@ -43,8 +43,7 @@ object TypeInference {
                       Set(TypeEquation(t2,Int_())) ++
                       c1 ++
                       c2
-                    )
-                    
+                    ) 
               }
             case LargerOrEqual =>
               {
@@ -117,15 +116,25 @@ object TypeInference {
                 }
               case TypeEquation(t1 : Variable, Func(t2,t3)) =>
                 {
-                   modified = true;
-                   c = c ++ Set(TypeEquation(t1,Func(t2,t3)))
-                   result += (t1 -> Func(t2, t3))
+                  if(result.get(t1) == None || result.get(t1) == Func(t2, t3))
+                  {
+                    modified = true;
+                    c = c ++ Set(TypeEquation(t1,Func(t2,t3)))
+                    result += (t1 -> Func(t2, t3))
+                  }
+                  else
+                    return None
                 }
               case TypeEquation( Func(t1,t2), t3 : Variable) =>
                 {
-                   modified = true;
-                   c = c ++ Set(TypeEquation(Func(t1,t2), t3))
-                   result += (t3 -> Func(t1, t2))
+                  if(result.get(t3) == None || result.get(t3) == Func(t1,t2))
+                  {
+                    modified = true;
+                    c = c ++ Set(TypeEquation(Func(t1,t2), t3))
+                    result += (t3 -> Func(t1, t2))
+                  }
+                  else
+                    return None
                 }
               case TypeEquation(t1, Func(t2,t3)) =>
                 {
@@ -156,11 +165,26 @@ object TypeInference {
                 }
               case TypeEquation(t1, t2 : Variable) =>
                 {
-                   c = c ++ Set(TypeEquation(t1, t2));
+                  if(result.get(t2) == None || result.get(t2) == Some(t1))
+                  {
+                    result += (t2 -> t1) 
+                    c = c ++ Set(TypeEquation(t1, t2));
+                  }
+                  else
+                    return None
                 }
               case TypeEquation(t1 : Variable, t2) =>
                 {
-                   c = c ++ Set(TypeEquation(t2, t1));                  
+                  var oo = result.get(t1)
+                  var ooo = Some(t2)
+                  var oooo = t2
+                  if(result.get(t1) == None || result.get(t1) == Some(t2))
+                  {
+                    result += (t1 -> t2)
+                    c = c ++ Set(TypeEquation(t2, t1));  
+                  }
+                  else
+                    return None
                 }
               case TypeEquation(t1, t2) =>
                 {
@@ -183,7 +207,7 @@ object TypeInference {
         case Bool_() => Some(Bool_())
         case Int_() => Some(Int_())
         case x : Variable => c.get(x)
-        case Func(t1, t2) => //Func(find(t1, v, c), find(t2, v, c))
+        case Func(t1, t2) =>
           (substitution(t1,c),substitution(t2,c)) 
           match 
           { 
