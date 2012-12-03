@@ -50,8 +50,8 @@ object TypeInference {
                      val (t1, c1) = typecheck(e1,gamma)
                     val (t2, c2) = typecheck(e2,gamma)
                     (Bool_(),
-                      Set(TypeEquation(t1,Bool_())) ++
-                      Set(TypeEquation(t2,Bool_())) ++
+                      Set(TypeEquation(t1,Int_())) ++
+                      Set(TypeEquation(t2,Int_())) ++
                       c1 ++
                       c2
                      )
@@ -60,7 +60,7 @@ object TypeInference {
         }
       case App(e1,e2)=>
          {
-            var x : Variable = Variable(newInt())
+            val x : Variable = Variable(newInt())
             val (t1, c1) = typecheck(e1,gamma)
             val (t2, c2) = typecheck(e2,gamma)
             (t2,

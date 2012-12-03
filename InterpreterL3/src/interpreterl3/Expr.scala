@@ -10,13 +10,13 @@ sealed abstract class Expr {
     case Raise => "raise"
     case N(n) => n.toString
     case B(b) => b.toString
-    case Fn(x, e) => "fn " + x.toString + " =>\n" + e.toString
+    case Fn(x, e) => "(fn " + x.toString + " =>" + e.toString + ")"
     case Op(op, e1, e2) => "(" + e1.toString + " " + op.toString + " " + e2.toString + ")"
-    case If(e1, e2, e3) => "if " + e1.toString + "\nthen " + e2.toString + "\nelse " + e3.toString
+    case If(e1, e2, e3) => "\n(if " + e1.toString + "\nthen " + e2.toString + "\nelse " + e3.toString + ")"
     case App(e1, e2) => "(" + e1.toString + " " + e2.toString + ")"
     case X(name) => name
-    case Let(x, e1, e2) => "let " + x.toString + " = " + e1.toString + "\nin\n" + e2.toString + "\nend"
-    case TryWith(e1, e2) => "try\n" + e1.toString + "\nwith\n" + e2.toString
+    case Let(x, e1, e2) => "\nlet " + x.toString + " = " + e1.toString + "\nin\n" + e2.toString + "\nend"
+    case TryWith(e1, e2) => "\n(try\n" + e1.toString + "\nwith\n" + e2.toString + ")"
   }
 }
 

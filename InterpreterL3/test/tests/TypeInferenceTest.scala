@@ -28,9 +28,10 @@ class TypeInferenceTest {
     assertEquals(Some(Int_()), TypeInference typeInfer (Raise \+ N(1)))
     assertEquals(Some(Int_()), TypeInference typeInfer (Raise _then Raise _else (Raise \+ N(1))))
     assertEquals(None, TypeInference typeInfer ((X("x") \=>: (X("x") \+ N(1))) _app B(true)))
-    assertEquals(B(false) , TypeInference typeInfer(N(3) \>= N(4)))
-    assertEquals(B(true) , TypeInference typeInfer(N(7) \>= N(2)))
-    assertEquals(Some(Int_()), TypeInference typeInfer( N(1) \+ B(true) \_trywith N(3)))
+    assertEquals(Some(Bool_()), TypeInference typeInfer (N(3) \>= N(4)))
+    assertEquals(Some(Bool_()), TypeInference typeInfer (N(7) \>= N(2)))
+    assertEquals(None, TypeInference typeInfer ( N(1) \+ B(true) _tryWith N(3)))
+    assertEquals(Some(Int_()), TypeInference typeInfer ( N(1) \+ Raise _tryWith N(3)))
   }
 
 }
