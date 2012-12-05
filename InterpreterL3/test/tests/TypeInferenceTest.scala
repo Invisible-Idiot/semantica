@@ -32,6 +32,8 @@ class TypeInferenceTest {
     assertEquals(Some(Bool_()), TypeInference typeInfer (N(7) \>= N(2)))
     assertEquals(None, TypeInference typeInfer ( N(1) \+ B(true) _tryWith N(3)))
     assertEquals(Some(Int_()), TypeInference typeInfer ( N(1) \+ Raise _tryWith N(3)))
+    assertEquals(Some(Func(Int_(), Func(Bool_(), Func(Int_(), Int_())))), TypeInference typeInfer (X("x") \=>: X("y") \=>: X("z") \=>: (X("y") _then (X("x") \+ X("z")) _else Raise)))
+    assertEquals(Some(Func(Func(Int_(), Bool_()), Func(Bool_(), Func(Int_(), Bool_())))), TypeInference typeInfer (X("x") \=>: X("y") \=>: X("z") \=>: (X("y") _then (X("x") _app X("z")) _else ((X("w") \=>: (X("w") \>= X("z"))) _app X("z")))))
   }
 
 }

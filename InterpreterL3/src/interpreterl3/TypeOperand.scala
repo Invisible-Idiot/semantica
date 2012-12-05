@@ -9,7 +9,7 @@ abstract class TypeOperand{
   override def toString() : String = this match {
     case Bool_() => "bool"
     case Int_() => "int"
-    case Func(t1, t2) => t1.toString + " -> (" + t2.toString + ")"
+    case Func(t1, t2) => "(" + t1.toString + " -> " + t2.toString + ")"
     case Variable(v) => "X" + v.toString
   }
 }
